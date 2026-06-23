@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <!-- Matches getExternalFilesDir(null)/rr_data used by RrService. -->
+    <external-files-path name="rr_data" path="rr_data/" />
+</paths>
