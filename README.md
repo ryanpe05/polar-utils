@@ -5,7 +5,8 @@ out of a Polar H9 chest strap.
 
 | Subdirectory | What it does | When to use it |
 | --- | --- | --- |
-| [`ble_rr/`](./ble_rr) | Streams HR + RR live from the H9 over Bluetooth LE and writes CSV. Uses the standard BLE Heart Rate Service, so it also works with H10, Wahoo TICKR, Garmin HRM-Pro, etc. | You want beat-to-beat RR data. **Recommended.** |
+| [`ble_rr/`](./ble_rr) | Streams HR + RR live from the H9 over Bluetooth LE and writes CSV. Uses the standard BLE Heart Rate Service, so it also works with H10, Wahoo TICKR, Garmin HRM-Pro, etc. | You want beat-to-beat RR data on a desktop. **Recommended.** |
+| [`android_rr/`](./android_rr) | Minimal Android app that records RR intervals from the H9 in a background foreground service and exports CSV. Same BLE protocol as `ble_rr`, but on your phone. | You want RR data on a test ride away from a computer. |
 | [`accesslink_rr/`](./accesslink_rr) | OAuth2 client for the Polar AccessLink REST API. Pulls exercises (HR, speed, distance, FIT/TCX) you've already uploaded to Polar Flow. | You want post-hoc access to your Polar Flow data, or for archiving HR/route info. |
 
 ## Why two projects?
@@ -36,20 +37,22 @@ notes and output format.
 
 ## On a bike / phone instead of a Mac?
 
-This repo is desktop-only. For mobile RR capture, use an existing app:
+For Android, use [`android_rr/`](./android_rr) — a minimal app in this repo that
+records RR in the background and exports CSV. See its README to build/install.
 
-- **Android**: *Polar Sensor Logger* (Jukka Happonen, free) — most likely
-  works with H9 via standard BLE HR; *HR Logger* as a fallback.
-- **iOS**: *HRV Logger* (Marco Altini, paid) — purpose-built for recording
-  RR during workouts.
+For iOS, this repo has nothing yet; *HRV Logger* (Marco Altini, paid) is a
+purpose-built third-party option.
 
 ## Layout
 
 ```
 .
-├── ble_rr/             # live BLE capture (recommended)
+├── ble_rr/             # live BLE capture on desktop (recommended)
 │   ├── scan.py
 │   ├── record.py
+│   └── README.md
+├── android_rr/         # Android app: background RR capture + CSV export
+│   ├── app/
 │   └── README.md
 ├── accesslink_rr/      # AccessLink REST API client
 │   ├── auth.py
