@@ -1,0 +1,2 @@
+requests>=2.31
+fitparse>=1.2

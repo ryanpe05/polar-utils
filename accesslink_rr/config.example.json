@@ -1,0 +1,5 @@
+{
+  "client_id": "PASTE_FROM_admin.polaraccesslink.com",
+  "client_secret": "PASTE_FROM_admin.polaraccesslink.com",
+  "redirect_uri": "http://localhost:5005/callback"
+}

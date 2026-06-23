@@ -1,0 +1,23 @@
+# Claude Code metadata
+.claude/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# Credentials & generated data (also covered per-subdir, repeated here for safety)
+**/config.json
+**/token.json
+**/data/
+
+# macOS
+.DS_Store
+
+# Editor
+.vscode/
+.idea/
+*.swp
