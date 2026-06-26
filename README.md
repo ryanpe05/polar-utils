@@ -1,7 +1,8 @@
 # polar-rr
 
-Two small Python projects for getting **heart rate and RR-interval data**
-out of a Polar H9 chest strap.
+Three small projects for getting **heart rate and RR-interval data**
+out of a Polar H9 chest strap: two Python tools (desktop BLE capture and an
+AccessLink REST client) plus a minimal Android app.
 
 | Subdirectory | What it does | When to use it |
 | --- | --- | --- |
@@ -9,18 +10,22 @@ out of a Polar H9 chest strap.
 | [`android_rr/`](./android_rr) | Minimal Android app that records RR intervals from the H9 in a background foreground service and exports CSV. Same BLE protocol as `ble_rr`, but on your phone. | You want RR data on a test ride away from a computer. |
 | [`accesslink_rr/`](./accesslink_rr) | OAuth2 client for the Polar AccessLink REST API. Pulls exercises (HR, speed, distance, FIT/TCX) you've already uploaded to Polar Flow. | You want post-hoc access to your Polar Flow data, or for archiving HR/route info. |
 
-## Why two projects?
+## Why three projects?
 
 The original goal was to pull RR intervals from existing Polar Flow activities
-via AccessLink. That turned out to be a dead end for **Polar Flow phone app +
-H9** recordings: the API exposes HR/speed/distance but not RR, the TCX export
-has no RR extensions, and the FIT export has no `hrv` messages. RR via
-AccessLink appears to require recording with a **Polar watch** paired to an
-H-series strap; the watch is what writes RR to the upload.
+via AccessLink (`accesslink_rr/`). That turned out to be a dead end for **Polar
+Flow phone app + H9** recordings: the API exposes HR/speed/distance but not RR,
+the TCX export has no RR extensions, and the FIT export has no `hrv` messages.
+RR via AccessLink appears to require recording with a **Polar watch** paired to
+an H-series strap; the watch is what writes RR to the upload.
 
 The live-BLE path (`ble_rr/`) sidesteps the cloud entirely and gives every
 beat, not 1-Hz downsampled HR. It's the simpler and more reliable answer if
-RR is what you actually want.
+RR is what you actually want, and it's the recommended starting point.
+
+The Android app (`android_rr/`) takes that same live-BLE approach off the
+desktop, so you can capture RR on a phone during a test ride away from a
+computer.
 
 ## Quick start (RR data, today)
 
