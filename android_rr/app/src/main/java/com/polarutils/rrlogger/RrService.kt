@@ -42,6 +42,10 @@ class RrService : Service() {
         const val ACTION_START = "com.polarutils.rrlogger.START"
         const val ACTION_STOP = "com.polarutils.rrlogger.STOP"
 
+        // Optional: MAC address of the specific strap the user picked. When
+        // absent, the first HR strap found wins (legacy behaviour).
+        const val EXTRA_DEVICE_ADDRESS = "device_address"
+
         // Broadcast back to the UI with live status.
         const val ACTION_STATUS = "com.polarutils.rrlogger.STATUS"
         const val EXTRA_STATUS = "status"
@@ -70,6 +74,9 @@ class RrService : Service() {
     private var rrCount = 0
     @Volatile private var running = false
 
+    /** MAC address of the strap the user selected, or null to take the first found. */
+    private var targetAddress: String? = null
+
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -79,14 +86,15 @@ class RrService : Service() {
                 stopSelf()
                 return START_NOT_STICKY
             }
-            else -> startCapture()
+            else -> startCapture(intent?.getStringExtra(EXTRA_DEVICE_ADDRESS))
         }
         return START_STICKY
     }
 
-    private fun startCapture() {
+    private fun startCapture(address: String?) {
         if (running) return
         running = true
+        targetAddress = address
 
         createChannel()
         startForeground(NOTIF_ID, buildNotification("Starting…"))
@@ -128,9 +136,13 @@ class RrService : Service() {
     private val scanCallback = object : ScanCallback() {
         @SuppressLint("MissingPermission")
         override fun onScanResult(callbackType: Int, result: ScanResult) {
-            // First strap wins; stop scanning and connect.
-            scanner?.stopScan(this)
             val device = result.device
+            // If the user picked a specific strap, ignore every other one in the
+            // room — otherwise the first strap found wins (legacy behaviour).
+            val target = targetAddress
+            if (target != null && device.address != target) return
+
+            scanner?.stopScan(this)
             broadcast("Connecting to ${device.name ?: device.address}…")
             gatt = device.connectGatt(this@RrService, false, gattCallback)
         }

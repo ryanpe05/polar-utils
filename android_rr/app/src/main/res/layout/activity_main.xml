@@ -23,7 +23,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Start" />
+            android:text="Scan" />
 
         <Button
             android:id="@+id/stop"
@@ -46,7 +46,7 @@
         android:paddingTop="16dp"
         android:paddingBottom="4dp"
         android:textStyle="bold"
-        android:text="Recordings" />
+        android:text="Recordings (tick to export)" />
 
     <ListView
         android:id="@+id/file_list"
