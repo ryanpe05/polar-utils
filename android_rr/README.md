@@ -9,18 +9,21 @@ pocket it for a test ride. No account, no cloud.
 
 ## What it does
 
-- Scans for the standard BLE **Heart Rate Service** (`0x180D`) and connects to
-  the first strap it finds.
+- **Scan** lists every nearby BLE **Heart Rate Service** (`0x180D`) strap so you
+  can **pick which one to pair with** — handy when several straps are in the
+  room. It then connects only to the strap you chose (and reconnects to that
+  same one if it drops out, ignoring other straps in range).
 - Subscribes to **Heart Rate Measurement** (`0x2A37`) and parses each
   notification (HR + RR intervals in 1/1024 s units) exactly like
   `ble_rr/record.py`.
 - Writes rows to a CSV in the app's external files dir via a **foreground
   service**, so capture survives the screen turning off / the app being
   backgrounded.
-- **Export** opens the system share sheet with the recorded CSV files (AirDrop
-  to a Mac, email to yourself, save to Drive, etc.).
+- **Export** lets you tick **which recordings** to share, then opens the system
+  share sheet with just those CSV files (AirDrop to a Mac, email to yourself,
+  save to Drive, etc.). With nothing ticked it offers to export all.
 
-It deliberately has almost no UI: Start, Stop, Export, and a list of recordings.
+It deliberately has almost no UI: Scan, Stop, Export, and a list of recordings.
 
 ## Output format
 
@@ -61,10 +64,14 @@ Or from the command line, once an Android SDK is configured (set `sdk.dir` in
 1. Wet the H9 electrodes and put it on (the strap wakes on chest contact).
 2. Make sure no other app holds the strap (Polar Flow, a watch, etc. — BLE is
    one connection at a time).
-3. Open the app, tap **Start**, grant the Bluetooth / notification permissions.
-4. The persistent notification shows live HR and the RR count. Pocket the phone
+3. Open the app, tap **Scan**, grant the Bluetooth / notification permissions.
+4. Pick your strap from the list (each entry shows its name, MAC address, and
+   signal strength — the nearest strap is usually the strongest). Capture
+   starts as soon as you tap it. Tap **Rescan** if it isn't listed yet.
+5. The persistent notification shows live HR and the RR count. Pocket the phone
    and ride.
-5. Tap **Stop** when done, then **Export** to share the CSV(s).
+6. Tap **Stop** when done. In the recordings list, **tick the files** you want
+   and tap **Export** to share them.
 
 ## Permissions
 
@@ -76,8 +83,9 @@ Or from the command line, once an Android SDK is configured (set `sdk.dir` in
 
 ## Notes / limitations
 
-- Connects to the **first** HR strap it sees. If you ride near other people
-  wearing straps, that's a (very unlikely) gotcha; there's no device picker yet.
-- If the strap drops out of range it auto-rescans and reconnects.
+- **Scan** shows every HR strap in range so you can pick the right one when more
+  than one is nearby. The scan gives up after ~10 s; hit **Rescan** to retry.
+- If the strap drops out of range it auto-rescans and reconnects to the **same**
+  strap you selected, ignoring any others in range.
 - Battery optimization on some phones can still kill long-running services;
   for a long ride, exempt the app from battery optimization in system settings.
